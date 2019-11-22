@@ -1,5 +1,8 @@
 import random
 
+from Graph import Graph
+from Vertex import Vertex
+
 
 def modify_solution(graph, solution):
     solution_copy = solution.copy()
@@ -32,3 +35,7 @@ def fitness(solution):
         sum += vertex.cost
         sum += solution[i - 1].cost_to_visit(vertex)
     return sum
+
+
+def generate_random_point(range):
+    return random.randint(range[0], range[1]), random.randint(range[0], range[1])

@@ -1,6 +1,8 @@
 class Vertex:
-    def __init__(self, id, cost, neighbours=[]):
+    def __init__(self, id, cost, x, y, neighbours=[]):
         self.neighbours = neighbours
+        self.x = x
+        self.y = y
         self.cost = cost
         self.id = id
         self.visited = False
