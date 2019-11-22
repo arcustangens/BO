@@ -1,10 +1,7 @@
-import math
 import random
 
 from Bee import Bee
-from Vertex import Vertex
-from Graph import Graph
-from util import modify_solution, fitness, generate_random_point
+from util import modify_solution, fitness, generate_random
 
 vertex_cost_range = (15, 60)
 edge_cost_range = (15, 60)
@@ -12,23 +9,7 @@ edge_existence_probability = 0.8
 vertices_coordinates_range = (-100, 100)
 vertices_number = 100
 
-graph = Graph([])
-for i in range(vertices_number):
-    point = generate_random_point(vertices_coordinates_range)
-    graph.add_vertex(Vertex(i, random.randint(vertex_cost_range[0], vertex_cost_range[1]), point[0], point[1]))
-
-starting_point = graph.vertices[0]
-last_point = graph.vertices[len(graph.vertices) - 1]
-
-print(str(starting_point.x) + ' ' + str(starting_point.y))
-
-for v1 in graph.vertices:
-    sorted_neighbours = sorted(graph.vertices,
-                               key=lambda p: math.sqrt((p.x - v1.x) ** 2 + (p.y - v1.y) ** 2))
-    for v2 in sorted_neighbours:
-        if v1.id != v2.id:
-            cost = math.sqrt((v2.x - v1.x) ** 2 + (v2.y - v1.y) ** 2)
-            graph.add_edge_with_probability(v1, v2, cost, edge_existence_probability)
+graph = generate_random(vertices_number, vertices_coordinates_range, vertex_cost_range, edge_existence_probability)
 
 cost = 1000
 
