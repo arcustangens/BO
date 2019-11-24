@@ -7,7 +7,7 @@ from Vertex import Vertex
 
 def modify_solution(graph, solution):
     solution_copy = solution.copy()
-    choice = random.randint(0, 3)
+    choice = random.randint(0, 4)
     # remove
     if choice == 0:
         solution_copy.remove(random.choice(solution_copy[1:-1]))
@@ -27,6 +27,9 @@ def modify_solution(graph, solution):
 
         solution_copy.remove(solution_copy[index])
         solution_copy.insert(index, vertex)
+    # rand current path
+    if choice == 3:
+        random.shuffle(solution_copy[1:-1])
     return solution_copy
 
 
