@@ -16,6 +16,13 @@ class Vertex:
             if vertex.id == other.id:
                 self.neighbours.remove(elem)
 
+    def is_neighbour_with(self, v2):
+        for elem in self.neighbours:
+            vertex = elem[0]
+            if vertex.id == v2.id:
+                return True
+        return False
+
     def cost_to_visit(self, other):
         for neighbour in self.neighbours:
             if neighbour[0].id == other.id:

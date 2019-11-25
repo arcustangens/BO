@@ -5,13 +5,13 @@ from util import modify_solution, fitness, generate_random
 
 vertex_cost_range = (15, 60)
 edge_cost_range = (15, 60)
-edge_existence_probability = 0.8
-vertices_coordinates_range = (-100, 100)
+edge_existence_probability = 0.9
+vertices_coordinates_range = (0, 50)
 vertices_number = 100
+cost = 1000
 
 graph = generate_random(vertices_number, vertices_coordinates_range, vertex_cost_range, edge_existence_probability)
 
-cost = 1000
 
 v = random.choice(graph.vertices)
 current_cost = v.cost
@@ -22,10 +22,15 @@ while current_cost < cost:
     next = random.choice(v.neighbours)
     while next[0] in path:
         next = random.choice(v.neighbours)
+
+    while not v.is_neighbour_with(next[0]):
+        next = random.choice(v.neighbours)
+        while next[0] in path:
+            next = random.choice(v.neighbours)
+    print(str(path[-1].id) + ' ' + str(next[0].id))
     path.append(next[0])
     v = next[0]
     current_cost += next[1] + next[0].cost
-    # print(v.id, "  ", v.cost, "  ", next[1])
 
 n_of_bees = 100
 n_of_good = 20
@@ -71,3 +76,8 @@ for i in range(20):
         bee.generate_new_solution()
 
     print('Fitness: ' + str(fitness(current_best_solution)) + ' Length of path: ' + str(len(current_best_solution)))
+
+
+# for i, v in enumerate(all_time_best_solution):
+#     print(str(all_time_best_solution[i]))
+

@@ -7,30 +7,54 @@ from Vertex import Vertex
 
 def modify_solution(graph, solution):
     solution_copy = solution.copy()
-    choice = random.randint(0, 4)
+    choice = random.randint(0, 2)
     # remove
     if choice == 0:
-        solution_copy.remove(random.choice(solution_copy[1:-1]))
+        max_count = len(graph.vertices) / 4
+        while max_count > 0:
+            max_count = max_count - 1
+            index = random.randint(2, len(solution_copy) - 4)
+            if solution_copy[index].is_neighbour_with(solution_copy[index + 2]):
+                del solution_copy[index + 1]
+                # print('remove')
+                break
+
     # add
     if choice == 1:
-        vertex = random.choice(graph.vertices)
-        while vertex in solution_copy:
-            vertex = random.choice(graph.vertices)
-        index = random.randint(1, len(solution_copy) - 1)
-        solution_copy.insert(index, vertex)
+        index = random.randint(1, len(solution_copy) - 2)
+
+        max_count = len(graph.vertices) / 8
+        while max_count > 0:
+            max_count = max_count - 1
+            vertex = get_vertex_not_in_solution(graph, solution_copy)
+            if solution_copy[index].is_neighbour_with(vertex) and vertex.is_neighbour_with(solution_copy[index+1]):
+                solution_copy.insert(index, vertex)
+                # print('add')
+                break
+
+
     # switch
     if choice == 2:
-        vertex = random.choice(graph.vertices)
-        while vertex in solution_copy:
-            vertex = random.choice(graph.vertices)
-        index = random.randint(1, len(solution_copy) - 1)
 
-        solution_copy.remove(solution_copy[index])
-        solution_copy.insert(index, vertex)
-    # rand current path
-    if choice == 3:
-        random.shuffle(solution_copy[1:-1])
+        max_count = len(graph.vertices) / 8
+        while max_count > 0:
+            max_count = max_count - 1
+            vertex = get_vertex_not_in_solution(graph, solution_copy)
+            index = random.randint(2, len(solution_copy) - 3)
+            if solution_copy[index-1].is_neighbour_with(vertex) and vertex.is_neighbour_with(solution_copy[index+1]):
+                solution_copy.remove(solution_copy[index])
+                solution_copy.insert(index, vertex)
+                # print('switch')
+                break
+
     return solution_copy
+
+
+def get_vertex_not_in_solution(graph, solution_copy):
+    vertex = random.choice(graph.vertices)
+    while vertex in solution_copy:
+        vertex = random.choice(graph.vertices)
+    return vertex
 
 
 def fitness(solution):
@@ -60,33 +84,35 @@ def generate_random(vertices_number, vertices_coordinates_range, vertex_cost_ran
     return graph
 
 
-def generate_custom_1(cost, probability):
+def generate_custom_1(vertices_number, cost, probability):
     graph = Graph([])
     id = 0
     span_x = 100
 
     # 1 path
 
-    v_1_num = 100
-    v_1_profitability = 0.7
+    v_1_num = round(vertices_number * 0.9)
+    v_1_profitability = 0.4
     for x in range(1, v_1_num):
         next_x = span_x / v_1_num * x
         graph.add_vertex(Vertex(id, round((cost / v_1_num) * v_1_profitability), next_x, random.randint(1, 10)))
         id = id + 1
+        print('Added ' + str(round((cost / v_1_num) * v_1_profitability)) + ' ' + str(next_x))
 
     append_realistic_edges(graph, graph.vertices, probability)
 
     # 2 path
 
     path2_verticies = []
-    v_2_num = 10
+    v_2_num = round(vertices_number * 0.1)
     v_2_profitability = 0.95
-    for x in range(1, 5):
-        next_x = span_x / v_2_num * x
+    for x in range(1, v_2_num):
+        next_x = (span_x / v_2_num) * x
         vertex = Vertex(id, round((cost / v_2_num) * v_2_profitability), next_x, random.randint(-15, 0))
         path2_verticies.append(vertex)
         graph.add_vertex(vertex)
         id = id + 1
+        print('Addedx ' + str(round((cost / v_2_num) * v_2_profitability)) + ' ' + str(next_x))
 
     append_realistic_edges(graph, path2_verticies, probability)
 
