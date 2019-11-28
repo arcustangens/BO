@@ -1,6 +1,6 @@
 class Vertex:
-    def __init__(self, id, cost, x, y, neighbours=[]):
-        self.neighbours = neighbours
+    def __init__(self, id, cost, x, y):
+        self.neighbours = []
         self.x = x
         self.y = y
         self.cost = cost
@@ -27,6 +27,7 @@ class Vertex:
         for neighbour in self.neighbours:
             if neighbour[0].id == other.id:
                 return neighbour[1]
+        raise Exception("This can not happen")
 
     def __str__(self):
         return str(self.id)
