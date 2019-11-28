@@ -1,10 +1,24 @@
+import configparser
 import random
 
 from Bee import Bee
-from util import modify_solution, fitness, generate_custom_1
+from util import modify_solution, fitness, generate_random
 
-vertex_cost_range = (15, 60)
-edge_cost_range = (15, 60)
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+
+lower_vertex_cost_limit = config['a']['lower_vertex_cost_limit']
+upper_vertex_cost_limit = config['a']['upper_vertex_cost_limit']
+vertex_cost_range = (int(lower_vertex_cost_limit),int(upper_vertex_cost_limit))
+
+lower_edge_cost_limit = config['a']['lower_edge_cost_limit']
+upper_edge_cost_limit = config['a']['upper_edge_cost_limit']
+edge_cost_range = (int(lower_edge_cost_limit),int(upper_edge_cost_limit))
+
+
+# vertex_cost_range = (15, 60)
+# edge_cost_range = (15, 60)
 edge_existence_probability = 0.9
 vertices_coordinates_range = (0, 100)
 vertices_number = 200
@@ -12,7 +26,7 @@ cost = 4000
 bridges_number = 20
 path_vertices_distribution = (0.95,0.05)
 
-graph = generate_custom_1(vertices_number, cost, edge_existence_probability, bridges_number, path_vertices_distribution)
+graph = generate_random(vertices_number, vertices_coordinates_range, vertex_cost_range, edge_existence_probability)
 
 v = graph.vertices[0]
 current_cost = v.cost
@@ -60,7 +74,7 @@ for i, v in enumerate(all_time_best_solution):
 
 print('Fitness: ' + str(fitness(all_time_best_solution)) + ' Length of path: ' + str(len(all_time_best_solution)))
 
-for i in range(100):
+for i in range(iteration):
     solutions = [bee.current_solution for bee in bees]
     fitnesses = [fitness(solution) for solution in solutions]
     fit_sol = list(zip(fitnesses, solutions))
@@ -104,3 +118,6 @@ for i, v in enumerate(all_time_best_solution):
 print()
 print('Vertex in path1: ' + str(len(all_time_best_solution) - c))
 print('Vertex in path2: ' + str(c))
+
+for v in all_time_best_solution:
+    print(str(v.id))
